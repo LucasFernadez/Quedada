@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quedar - Coordina tu reunión</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      color: white;
+      margin-bottom: 30px;
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+
+    header p {
+      opacity: 0.9;
+      font-size: 1.1rem;
+    }
+
+    .status-bar {
+      background: rgba(255,255,255,0.2);
+      border-radius: 10px;
+      padding: 15px 20px;
+      margin-bottom: 20px;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .status-bar .usuarios-lista {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    .card {
+      background: white;
+      border-radius: 15px;
+      padding: 25px;
+      margin-bottom: 20px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    }
+
+    .calendarios {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .mes {
+      border: 1px solid #e0e0e0;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .mes-header {
+      background: #667eea;
+      color: white;
+      padding: 15px;
+      text-align: center;
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+
+    .dias-semana {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      background: #f5f5f5;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .dias-semana span {
+      padding: 10px 5px;
+      text-align: center;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #666;
+    }
+
+    .dias-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 2px;
+      padding: 10px;
+    }
+
+    .dia {
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+      border: 2px solid transparent;
+    }
+
+    .dia:hover:not(.vacio) {
+      background: #e8e8ff;
+    }
+
+    .dia.seleccionado {
+      background: #667eea;
+      color: white;
+      font-weight: 600;
+    }
+
+    .dia.vacio {
+      cursor: default;
+    }
+
+    .formulario {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .formulario input {
+      flex: 1;
+      min-width: 200px;
+      padding: 15px 20px;
+      border: 2px solid #e0e0e0;
+      border-radius: 10px;
+      font-size: 1rem;
+      transition: border-color 0.3s;
+    }
+
+    .formulario input:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    .btn {
+      padding: 15px 30px;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-primary {
+      background: #667eea;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #5a6fd6;
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background: #f0f0f0;
+      color: #666;
+    }
+
+    .btn-secondary:hover {
+      background: #e0e0e0;
+    }
+
+    .btn-danger {
+      background: #ff6b6b;
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background: #ee5a5a;
+    }
+
+    .mensaje {
+      padding: 20px;
+      border-radius: 10px;
+      margin-top: 20px;
+      text-align: center;
+      font-weight: 500;
+      display: none;
+    }
+
+    .mensaje.exito {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+      display: block;
+    }
+
+    .mensaje.error {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+      display: block;
+    }
+
+    .resultado {
+      background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+      color: white;
+      padding: 30px;
+      border-radius: 15px;
+      text-align: center;
+      margin-top: 20px;
+      display: none;
+    }
+
+    .resultado.visible {
+      display: block;
+      animation: aparecer 0.5s ease;
+    }
+
+    .resultado h2 {
+      font-size: 1.5rem;
+      margin-bottom: 15px;
+    }
+
+    .resultado .fechas-ganadoras {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin: 15px 0;
+    }
+
+    .resultado.sin-coincidencias {
+      background: linear-gradient(135deg, #ff6b6b 0%, #ffa500 100%);
+    }
+
+    .acciones {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .seleccion-info {
+      color: #666;
+      font-size: 0.9rem;
+      margin-top: 15px;
+    }
+
+    @keyframes aparecer {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 600px) {
+      header h1 {
+        font-size: 1.8rem;
+      }
+      
+      .formulario {
+        flex-direction: column;
+      }
+      
+      .formulario input, .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>📅 Quedar</h1>
+      <p>Encuentra el día perfecto para reunirte con tus amigos</p>
+    </header>
+
+    <div class="status-bar">
+      <div>
+        <strong>Usuarios registrados:</strong> <span id="contador">0</span>/4
+      </div>
+      <div class="usuarios-lista" id="usuariosLista"></div>
+    </div>
+
+    <div class="card">
+      <div class="calendarios">
+        <!-- Febrero 2026 -->
+        <div class="mes">
+          <div class="mes-header">Febrero 2026</div>
+          <div class="dias-semana">
+            <span>Lun</span>
+            <span>Mar</span>
+            <span>Mié</span>
+            <span>Jue</span>
+            <span>Vie</span>
+            <span>Sáb</span>
+            <span>Dom</span>
+          </div>
+          <div class="dias-grid" id="febrero"></div>
+        </div>
+
+        <!-- Marzo 2026 -->
+        <div class="mes">
+          <div class="mes-header">Marzo 2026</div>
+          <div class="dias-semana">
+            <span>Lun</span>
+            <span>Mar</span>
+            <span>Mié</span>
+            <span>Jue</span>
+            <span>Vie</span>
+            <span>Sáb</span>
+            <span>Dom</span>
+          </div>
+          <div class="dias-grid" id="marzo"></div>
+        </div>
+      </div>
+
+      <p class="seleccion-info">
+        <span id="seleccionadas">0</span> fechas seleccionadas
+      </p>
+    </div>
+
+    <div class="card">
+      <div class="formulario">
+        <input type="text" id="nombre" placeholder="Tu nombre" maxlength="30">
+        <button class="btn btn-primary" id="btnEnviar">Enviar disponibilidad</button>
+      </div>
+      <div class="mensaje" id="mensaje"></div>
+    </div>
+
+    <div class="resultado" id="resultado">
+      <h2>🎉 ¡Resultado de la votación!</h2>
+      <div id="resultadoContenido"></div>
+    </div>
+
+    <div class="acciones">
+      <button class="btn btn-danger" id="btnReiniciar">Reiniciar votación</button>
+    </div>
+  </div>
+
+  <script>
+    // ============ ESTADO DE LA APLICACIÓN ============
+    const state = {
+      fechasSeleccionadas: new Set()
+    };
+
+    // ============ ELEMENTOS DOM ============
+    const elementos = {
+      febrero: document.getElementById('febrero'),
+      marzo: document.getElementById('marzo'),
+      nombre: document.getElementById('nombre'),
+      btnEnviar: document.getElementById('btnEnviar'),
+      btnReiniciar: document.getElementById('btnReiniciar'),
+      mensaje: document.getElementById('mensaje'),
+      resultado: document.getElementById('resultado'),
+      resultadoContenido: document.getElementById('resultadoContenido'),
+      contador: document.getElementById('contador'),
+      usuariosLista: document.getElementById('usuariosLista'),
+      seleccionadas: document.getElementById('seleccionadas')
+    };
+
+    // ============ INICIALIZACIÓN ============
+    function init() {
+      generarCalendario('febrero', 2026, 2, 28);
+      generarCalendario('marzo', 2026, 3, 31);
+      cargarEstado();
+      
+      elementos.btnEnviar.addEventListener('click', enviarDisponibilidad);
+      elementos.btnReiniciar.addEventListener('click', reiniciarVotacion);
+      elementos.nombre.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') enviarDisponibilidad();
+      });
+    }
+
+    // ============ GENERAR CALENDARIO ============
+    function generarCalendario(contenedorId, año, mes, diasEnMes) {
+      const contenedor = document.getElementById(contenedorId);
+      contenedor.innerHTML = '';
+      
+      // Calcular el día de la semana del primer día (0=Dom, 1=Lun, ...)
+      const primerDia = new Date(año, mes - 1, 1).getDay();
+      // Convertir a formato Lunes=0
+      const offset = primerDia === 0 ? 6 : primerDia - 1;
+      
+      // Agregar días vacíos al inicio
+      for (let i = 0; i < offset; i++) {
+        const diaVacio = document.createElement('div');
+        diaVacio.className = 'dia vacio';
+        contenedor.appendChild(diaVacio);
+      }
+      
+      // Agregar días del mes
+      for (let dia = 1; dia <= diasEnMes; dia++) {
+        const diaElemento = document.createElement('div');
+        diaElemento.className = 'dia';
+        diaElemento.textContent = dia;
+        
+        const fechaStr = formatearFecha(año, mes, dia);
+        diaElemento.dataset.fecha = fechaStr;
+        
+        diaElemento.addEventListener('click', () => toggleDia(diaElemento, fechaStr));
+        
+        contenedor.appendChild(diaElemento);
+      }
+    }
+
+    // ============ FORMATEAR FECHA ============
+    function formatearFecha(año, mes, dia) {
+      const mesStr = mes.toString().padStart(2, '0');
+      const diaStr = dia.toString().padStart(2, '0');
+      return `${año}-${mesStr}-${diaStr}`;
+    }
+
+    // ============ TOGGLE DÍA ============
+    function toggleDia(elemento, fecha) {
+      if (state.fechasSeleccionadas.has(fecha)) {
+        state.fechasSeleccionadas.delete(fecha);
+        elemento.classList.remove('seleccionado');
+      } else {
+        state.fechasSeleccionadas.add(fecha);
+        elemento.classList.add('seleccionado');
+      }
+      actualizarContadorSeleccion();
+    }
+
+    // ============ ACTUALIZAR CONTADOR SELECCIÓN ============
+    function actualizarContadorSeleccion() {
+      elementos.seleccionadas.textContent = state.fechasSeleccionadas.size;
+    }
+
+    // ============ ENVIAR DISPONIBILIDAD ============
+    async function enviarDisponibilidad() {
+      const nombre = elementos.nombre.value.trim();
+      const fechas = Array.from(state.fechasSeleccionadas);
+      
+      if (!nombre) {
+        mostrarMensaje('Por favor, ingresa tu nombre', 'error');
+        return;
+      }
+      
+      if (fechas.length === 0) {
+        mostrarMensaje('Por favor, selecciona al menos una fecha', 'error');
+        return;
+      }
+      
+      elementos.btnEnviar.disabled = true;
+      elementos.btnEnviar.textContent = 'Enviando...';
+      
+      try {
+        const response = await fetch('/api/disponibilidad', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ nombre, fechas })
+        });
+        
+        const data = await response.json();
+        
+        if (!response.ok) {
+          mostrarMensaje(data.error, 'error');
+          return;
+        }
+        
+        mostrarMensaje(data.mensaje, 'exito');
+        
+        // Limpiar formulario
+        elementos.nombre.value = '';
+        limpiarSeleccion();
+        
+        // Actualizar estado
+        cargarEstado();
+        
+        // Mostrar resultado si está completado
+        if (data.completado) {
+          mostrarResultado(data.fechasCoincidentes);
+        }
+        
+      } catch (error) {
+        console.error('Error:', error);
+        mostrarMensaje('Error de conexión con el servidor', 'error');
+      } finally {
+        elementos.btnEnviar.disabled = false;
+        elementos.btnEnviar.textContent = 'Enviar disponibilidad';
+      }
+    }
+
+    // ============ CARGAR ESTADO ============
+    async function cargarEstado() {
+      try {
+        const response = await fetch('/api/estado');
+        const data = await response.json();
+        
+        elementos.contador.textContent = data.usuariosRegistrados;
+        
+        if (data.usuarios && data.usuarios.length > 0) {
+          elementos.usuariosLista.textContent = 'Registrados: ' + data.usuarios.join(', ');
+        } else {
+          elementos.usuariosLista.textContent = '';
+        }
+        
+        if (data.completado) {
+          mostrarResultado(data.fechasCoincidentes);
+        } else {
+          elementos.resultado.classList.remove('visible');
+        }
+        
+      } catch (error) {
+        console.error('Error cargando estado:', error);
+      }
+    }
+
+    // ============ MOSTRAR RESULTADO ============
+    function mostrarResultado(fechasCoincidentes) {
+      elementos.resultado.classList.add('visible');
+      
+      if (fechasCoincidentes && fechasCoincidentes.length > 0) {
+        elementos.resultado.classList.remove('sin-coincidencias');
+        const fechasFormateadas = fechasCoincidentes.map(f => {
+          const [año, mes, dia] = f.split('-');
+          const fecha = new Date(año, mes - 1, dia);
+          return fecha.toLocaleDateString('es-ES', { 
+            weekday: 'long', 
+            day: 'numeric', 
+            month: 'long' 
+          });
+        });
+        
+        elementos.resultadoContenido.innerHTML = `
+          <p>¡Los 4 amigos coinciden en ${fechasCoincidentes.length} fecha(s)!</p>
+          <div class="fechas-ganadoras">
+            ${fechasFormateadas.join('<br>')}
+          </div>
+          <p>🎊 ¡Es hora de quedar!</p>
+        `;
+      } else {
+        elementos.resultado.classList.add('sin-coincidencias');
+        elementos.resultadoContenido.innerHTML = `
+          <p>😢 No hay fechas en común entre los 4 amigos</p>
+          <p>Reinicia la votación para intentarlo de nuevo</p>
+        `;
+      }
+    }
+
+    // ============ REINICIAR VOTACIÓN ============
+    async function reiniciarVotacion() {
+      if (!confirm('¿Seguro que quieres reiniciar? Se eliminarán todos los datos.')) {
+        return;
+      }
+      
+      try {
+        const response = await fetch('/api/reiniciar', { method: 'DELETE' });
+        const data = await response.json();
+        
+        mostrarMensaje(data.mensaje, 'exito');
+        limpiarSeleccion();
+        elementos.resultado.classList.remove('visible');
+        cargarEstado();
+        
+      } catch (error) {
+        console.error('Error:', error);
+        mostrarMensaje('Error al reiniciar', 'error');
+      }
+    }
+
+    // ============ LIMPIAR SELECCIÓN ============
+    function limpiarSeleccion() {
+      state.fechasSeleccionadas.clear();
+      document.querySelectorAll('.dia.seleccionado').forEach(dia => {
+        dia.classList.remove('seleccionado');
+      });
+      actualizarContadorSeleccion();
+    }
+
+    // ============ MOSTRAR MENSAJE ============
+    function mostrarMensaje(texto, tipo) {
+      elementos.mensaje.textContent = texto;
+      elementos.mensaje.className = 'mensaje ' + tipo;
+      
+      setTimeout(() => {
+        elementos.mensaje.className = 'mensaje';
+      }, 5000);
+    }
+
+    // ============ INICIAR APP ============
+    init();
+  </script>
+</body>
+</html>
