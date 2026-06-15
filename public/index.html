@@ -1,10 +1,32 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="ca">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quedar - Coordina tu reunión</title>
+  <title>Quedar - Coordina la teva trobada</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --primary: #6366F1;
+      --primary-dark: #4f46e5;
+      --primary-soft: #eef0ff;
+      --secondary: #EC4899;
+      --tertiary: #0EA5E9;
+      --neutral-bg: #F1F2F6;
+      --surface: #ffffff;
+      --text: #1e2233;
+      --text-muted: #8a8fa3;
+      --border: #e8e9ef;
+      --danger: #ef4444;
+      --danger-soft: #fdecec;
+      --radius: 18px;
+      --radius-sm: 12px;
+      --shadow: 0 6px 24px rgba(31, 38, 76, 0.06);
+      --shadow-btn: 0 8px 20px rgba(99, 102, 241, 0.35);
+    }
+
     * {
       margin: 0;
       padding: 0;
@@ -12,100 +34,174 @@
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--neutral-bg);
+      color: var(--text);
       min-height: 100vh;
-      padding: 20px;
+      display: flex;
+      justify-content: center;
     }
 
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
+    .app {
+      width: 100%;
+      max-width: 430px;
+      min-height: 100vh;
+      background: var(--neutral-bg);
+      padding: 18px 16px 40px;
+      position: relative;
     }
 
-    header {
-      text-align: center;
-      color: white;
-      margin-bottom: 30px;
+    /* ---------- Top bar ---------- */
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 2px 18px;
     }
 
-    header h1 {
-      font-size: 2.5rem;
-      margin-bottom: 10px;
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 800;
+      font-size: 1.15rem;
+      color: var(--primary);
     }
 
-    header p {
-      opacity: 0.9;
+    .brand .logo {
+      width: 26px;
+      height: 26px;
+      display: grid;
+      place-items: center;
+      background: var(--primary-soft);
+      border-radius: 8px;
+      font-size: 0.95rem;
+    }
+
+    .icon-btn {
+      width: 38px;
+      height: 38px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      border-radius: 50%;
+      cursor: pointer;
       font-size: 1.1rem;
+      display: grid;
+      place-items: center;
+      transition: background 0.2s;
     }
 
-    .status-bar {
-      background: rgba(255,255,255,0.2);
-      border-radius: 10px;
-      padding: 15px 20px;
+    .icon-btn:hover { background: rgba(0,0,0,0.05); }
+
+    /* ---------- Hero ---------- */
+    .hero {
+      text-align: center;
       margin-bottom: 20px;
-      color: white;
+    }
+
+    .hero h1 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 800;
+      font-size: 1.55rem;
+      letter-spacing: -0.02em;
+    }
+
+    .hero p {
+      color: var(--text-muted);
+      font-size: 0.92rem;
+      margin-top: 6px;
+      line-height: 1.4;
+    }
+
+    /* ---------- Card ---------- */
+    .card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow);
+    }
+
+    /* ---------- Progress ---------- */
+    .progress-head {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      flex-wrap: wrap;
-      gap: 10px;
+      margin-bottom: 12px;
     }
 
-    .status-bar .usuarios-lista {
-      font-size: 0.9rem;
-      opacity: 0.9;
+    .progress-head .label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
     }
 
-    .card {
-      background: white;
-      border-radius: 15px;
-      padding: 25px;
-      margin-bottom: 20px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    .progress-head .count {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 800;
+      font-size: 1.05rem;
     }
 
-    .calendarios {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 20px;
-    }
-
-    .mes {
-      border: 1px solid #e0e0e0;
-      border-radius: 10px;
+    .progress-track {
+      height: 10px;
+      background: var(--neutral-bg);
+      border-radius: 999px;
       overflow: hidden;
     }
 
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      border-radius: 999px;
+      transition: width 0.4s ease;
+    }
+
+    .usuarios-lista {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 10px;
+    }
+
+    /* ---------- Calendar ---------- */
+    .mes { margin-bottom: 18px; }
+    .mes:last-child { margin-bottom: 0; }
+
     .mes-header {
-      background: #667eea;
-      color: white;
-      padding: 15px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #fff;
+      padding: 13px;
       text-align: center;
-      font-weight: 600;
-      font-size: 1.1rem;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 700;
+      font-size: 1.02rem;
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow-btn);
+      margin-bottom: 12px;
     }
 
     .dias-semana {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
-      background: #f5f5f5;
-      border-bottom: 1px solid #e0e0e0;
+      margin-bottom: 4px;
     }
 
     .dias-semana span {
-      padding: 10px 5px;
       text-align: center;
-      font-size: 0.8rem;
+      font-size: 0.72rem;
       font-weight: 600;
-      color: #666;
+      color: var(--text-muted);
+      padding: 4px 0;
     }
 
     .dias-grid {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
-      gap: 2px;
-      padding: 10px;
+      gap: 4px;
     }
 
     .dia {
@@ -113,244 +209,242 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: 8px;
+      border-radius: 50%;
       cursor: pointer;
-      font-size: 0.9rem;
-      transition: all 0.2s ease;
-      border: 2px solid transparent;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text);
+      transition: all 0.15s ease;
     }
 
-    .dia:hover:not(.vacio) {
-      background: #e8e8ff;
+    .dia:hover:not(.vacio):not(.seleccionado) {
+      background: var(--primary-soft);
+      color: var(--primary);
     }
 
     .dia.seleccionado {
-      background: #667eea;
-      color: white;
-      font-weight: 600;
+      background: var(--primary);
+      color: #fff;
+      font-weight: 700;
+      box-shadow: 0 4px 10px rgba(99, 102, 241, 0.4);
     }
 
-    .dia.vacio {
-      cursor: default;
-    }
+    .dia.vacio { cursor: default; }
 
-    .formulario {
+    .seleccion-info {
       display: flex;
-      gap: 15px;
       align-items: center;
-      flex-wrap: wrap;
+      gap: 6px;
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      margin-top: 14px;
     }
 
-    .formulario input {
-      flex: 1;
-      min-width: 200px;
-      padding: 15px 20px;
-      border: 2px solid #e0e0e0;
-      border-radius: 10px;
+    .seleccion-info .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--tertiary);
+    }
+
+    /* ---------- Form ---------- */
+    .form-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 700;
       font-size: 1rem;
-      transition: border-color 0.3s;
+      margin-bottom: 12px;
     }
 
-    .formulario input:focus {
+    .input-wrap {
+      position: relative;
+      margin-bottom: 14px;
+    }
+
+    .input-wrap input {
+      width: 100%;
+      padding: 14px 16px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 0.95rem;
+      font-family: inherit;
+      background: #fafbfc;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .input-wrap input:focus {
       outline: none;
-      border-color: #667eea;
+      border-color: var(--primary);
+      background: #fff;
     }
 
     .btn {
-      padding: 15px 30px;
+      width: 100%;
+      padding: 15px;
       border: none;
-      border-radius: 10px;
-      font-size: 1rem;
-      font-weight: 600;
+      border-radius: var(--radius-sm);
+      font-size: 0.98rem;
+      font-weight: 700;
+      font-family: 'Plus Jakarta Sans', sans-serif;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
 
     .btn-primary {
-      background: #667eea;
-      color: white;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #fff;
+      box-shadow: var(--shadow-btn);
     }
 
-    .btn-primary:hover {
-      background: #5a6fd6;
-      transform: translateY(-2px);
+    .btn-primary:hover:not(:disabled) { transform: translateY(-2px); }
+    .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .btn-reiniciar {
+      width: auto;
+      margin: 4px auto 0;
+      padding: 11px 22px;
+      background: var(--danger-soft);
+      color: var(--danger);
+      box-shadow: none;
+      font-size: 0.88rem;
     }
 
-    .btn-secondary {
-      background: #f0f0f0;
-      color: #666;
-    }
+    .btn-reiniciar:hover { background: #fbdada; }
 
-    .btn-secondary:hover {
-      background: #e0e0e0;
-    }
+    .acciones { text-align: center; }
 
-    .btn-danger {
-      background: #ff6b6b;
-      color: white;
-    }
-
-    .btn-danger:hover {
-      background: #ee5a5a;
-    }
-
+    /* ---------- Mensaje ---------- */
     .mensaje {
-      padding: 20px;
-      border-radius: 10px;
-      margin-top: 20px;
+      padding: 14px 16px;
+      border-radius: var(--radius-sm);
+      margin-top: 14px;
       text-align: center;
       font-weight: 500;
+      font-size: 0.9rem;
       display: none;
     }
 
     .mensaje.exito {
-      background: #d4edda;
-      color: #155724;
-      border: 1px solid #c3e6cb;
+      background: #e6f9f0;
+      color: #0f7a52;
       display: block;
     }
 
     .mensaje.error {
-      background: #f8d7da;
-      color: #721c24;
-      border: 1px solid #f5c6cb;
+      background: var(--danger-soft);
+      color: var(--danger);
       display: block;
     }
 
+    /* ---------- Resultado ---------- */
     .resultado {
-      background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-      color: white;
-      padding: 30px;
-      border-radius: 15px;
+      background: linear-gradient(135deg, var(--tertiary), var(--primary));
+      color: #fff;
+      padding: 24px 20px;
+      border-radius: var(--radius);
       text-align: center;
-      margin-top: 20px;
+      margin-bottom: 16px;
       display: none;
+      box-shadow: var(--shadow);
     }
 
     .resultado.visible {
       display: block;
-      animation: aparecer 0.5s ease;
+      animation: aparecer 0.4s ease;
     }
 
     .resultado h2 {
-      font-size: 1.5rem;
-      margin-bottom: 15px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1.25rem;
+      margin-bottom: 12px;
     }
 
     .resultado .fechas-ganadoras {
-      font-size: 1.8rem;
-      font-weight: 700;
-      margin: 15px 0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 800;
+      margin: 14px 0;
+      line-height: 1.5;
     }
 
     .resultado.sin-coincidencias {
-      background: linear-gradient(135deg, #ff6b6b 0%, #ffa500 100%);
-    }
-
-    .acciones {
-      margin-top: 20px;
-      text-align: center;
-    }
-
-    .seleccion-info {
-      color: #666;
-      font-size: 0.9rem;
-      margin-top: 15px;
+      background: linear-gradient(135deg, var(--secondary), #f97316);
     }
 
     @keyframes aparecer {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    @media (max-width: 600px) {
-      header h1 {
-        font-size: 1.8rem;
-      }
-      
-      .formulario {
-        flex-direction: column;
-      }
-      
-      .formulario input, .btn {
-        width: 100%;
-      }
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <h1>📅 Quedar</h1>
-      <p>Encuentra el día perfecto para reunirte con tus amigos</p>
-    </header>
+  <div class="app">
+    <div class="topbar">
+      <div class="brand">Quedar</div>
+    </div>
 
-    <div class="status-bar">
-      <div>
-        <strong>Usuarios registrados:</strong> <span id="contador">0</span>/4
+    <div class="hero">
+      <h1>Hola! Organitza el teu pla</h1>
+      <p>Troba el dia perfecte per quedar amb els teus amics</p>
+    </div>
+
+    <div class="card">
+      <div class="progress-head">
+        <span class="label">Usuaris registrats</span>
+        <span class="count"><span id="contador">0</span>/4</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progressFill"></div>
       </div>
       <div class="usuarios-lista" id="usuariosLista"></div>
     </div>
 
-    <div class="card">
-      <div class="calendarios">
-        <!-- Febrero 2026 -->
-        <div class="mes">
-          <div class="mes-header">Febrero 2026</div>
-          <div class="dias-semana">
-            <span>Lun</span>
-            <span>Mar</span>
-            <span>Mié</span>
-            <span>Jue</span>
-            <span>Vie</span>
-            <span>Sáb</span>
-            <span>Dom</span>
-          </div>
-          <div class="dias-grid" id="febrero"></div>
-        </div>
+    <div class="resultado" id="resultado">
+      <h2>Resultat de la votació</h2>
+      <div id="resultadoContenido"></div>
+    </div>
 
-        <!-- Marzo 2026 -->
-        <div class="mes">
-          <div class="mes-header">Marzo 2026</div>
-          <div class="dias-semana">
-            <span>Lun</span>
-            <span>Mar</span>
-            <span>Mié</span>
-            <span>Jue</span>
-            <span>Vie</span>
-            <span>Sáb</span>
-            <span>Dom</span>
-          </div>
-          <div class="dias-grid" id="marzo"></div>
+    <div class="card">
+      <!-- Juny 2026 -->
+      <div class="mes">
+        <div class="mes-header">Juny 2026</div>
+        <div class="dias-semana">
+          <span>Dl</span><span>Dt</span><span>Dc</span><span>Dj</span>
+          <span>Dv</span><span>Ds</span><span>Dg</span>
         </div>
+        <div class="dias-grid" id="junio"></div>
+      </div>
+
+      <!-- Juliol 2026 -->
+      <div class="mes">
+        <div class="mes-header">Juliol 2026</div>
+        <div class="dias-semana">
+          <span>Dl</span><span>Dt</span><span>Dc</span><span>Dj</span>
+          <span>Dv</span><span>Ds</span><span>Dg</span>
+        </div>
+        <div class="dias-grid" id="julio"></div>
       </div>
 
       <p class="seleccion-info">
-        <span id="seleccionadas">0</span> fechas seleccionadas
+        <span class="dot"></span>
+        <span id="seleccionadas">0</span>&nbsp;dates seleccionades
       </p>
     </div>
 
     <div class="card">
-      <div class="formulario">
-        <input type="text" id="nombre" placeholder="Tu nombre" maxlength="30">
-        <button class="btn btn-primary" id="btnEnviar">Enviar disponibilidad</button>
+      <div class="form-title">Qui ets?</div>
+      <div class="input-wrap">
+        <input type="text" id="nombre" placeholder="El teu nom" maxlength="30">
       </div>
+      <button class="btn btn-primary" id="btnEnviar">Enviar disponibilitat</button>
       <div class="mensaje" id="mensaje"></div>
     </div>
 
-    <div class="resultado" id="resultado">
-      <h2>🎉 ¡Resultado de la votación!</h2>
-      <div id="resultadoContenido"></div>
-    </div>
-
     <div class="acciones">
-      <button class="btn btn-danger" id="btnReiniciar">Reiniciar votación</button>
+      <button class="btn btn-reiniciar" id="btnReiniciar">Reiniciar la votació</button>
     </div>
   </div>
 
@@ -362,8 +456,8 @@
 
     // ============ ELEMENTOS DOM ============
     const elementos = {
-      febrero: document.getElementById('febrero'),
-      marzo: document.getElementById('marzo'),
+      junio: document.getElementById('junio'),
+      julio: document.getElementById('julio'),
       nombre: document.getElementById('nombre'),
       btnEnviar: document.getElementById('btnEnviar'),
       btnReiniciar: document.getElementById('btnReiniciar'),
@@ -372,15 +466,16 @@
       resultadoContenido: document.getElementById('resultadoContenido'),
       contador: document.getElementById('contador'),
       usuariosLista: document.getElementById('usuariosLista'),
-      seleccionadas: document.getElementById('seleccionadas')
+      seleccionadas: document.getElementById('seleccionadas'),
+      progressFill: document.getElementById('progressFill')
     };
 
     // ============ INICIALIZACIÓN ============
     function init() {
-      generarCalendario('febrero', 2026, 2, 28);
-      generarCalendario('marzo', 2026, 3, 31);
+      generarCalendario('junio', 2026, 6, 30);
+      generarCalendario('julio', 2026, 7, 31);
       cargarEstado();
-      
+
       elementos.btnEnviar.addEventListener('click', enviarDisponibilidad);
       elementos.btnReiniciar.addEventListener('click', reiniciarVotacion);
       elementos.nombre.addEventListener('keypress', (e) => {
@@ -392,30 +487,30 @@
     function generarCalendario(contenedorId, año, mes, diasEnMes) {
       const contenedor = document.getElementById(contenedorId);
       contenedor.innerHTML = '';
-      
+
       // Calcular el día de la semana del primer día (0=Dom, 1=Lun, ...)
       const primerDia = new Date(año, mes - 1, 1).getDay();
       // Convertir a formato Lunes=0
       const offset = primerDia === 0 ? 6 : primerDia - 1;
-      
+
       // Agregar días vacíos al inicio
       for (let i = 0; i < offset; i++) {
         const diaVacio = document.createElement('div');
         diaVacio.className = 'dia vacio';
         contenedor.appendChild(diaVacio);
       }
-      
+
       // Agregar días del mes
       for (let dia = 1; dia <= diasEnMes; dia++) {
         const diaElemento = document.createElement('div');
         diaElemento.className = 'dia';
         diaElemento.textContent = dia;
-        
+
         const fechaStr = formatearFecha(año, mes, dia);
         diaElemento.dataset.fecha = fechaStr;
-        
+
         diaElemento.addEventListener('click', () => toggleDia(diaElemento, fechaStr));
-        
+
         contenedor.appendChild(diaElemento);
       }
     }
@@ -448,54 +543,54 @@
     async function enviarDisponibilidad() {
       const nombre = elementos.nombre.value.trim();
       const fechas = Array.from(state.fechasSeleccionadas);
-      
+
       if (!nombre) {
-        mostrarMensaje('Por favor, ingresa tu nombre', 'error');
+        mostrarMensaje('Si us plau, introdueix el teu nom', 'error');
         return;
       }
-      
+
       if (fechas.length === 0) {
-        mostrarMensaje('Por favor, selecciona al menos una fecha', 'error');
+        mostrarMensaje('Si us plau, selecciona almenys una data', 'error');
         return;
       }
-      
+
       elementos.btnEnviar.disabled = true;
-      elementos.btnEnviar.textContent = 'Enviando...';
-      
+      elementos.btnEnviar.textContent = 'Enviant...';
+
       try {
         const response = await fetch('/api/disponibilidad', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ nombre, fechas })
         });
-        
+
         const data = await response.json();
-        
+
         if (!response.ok) {
           mostrarMensaje(data.error, 'error');
           return;
         }
-        
+
         mostrarMensaje(data.mensaje, 'exito');
-        
+
         // Limpiar formulario
         elementos.nombre.value = '';
         limpiarSeleccion();
-        
+
         // Actualizar estado
         cargarEstado();
-        
+
         // Mostrar resultado si está completado
         if (data.completado) {
           mostrarResultado(data.fechasCoincidentes);
         }
-        
+
       } catch (error) {
         console.error('Error:', error);
-        mostrarMensaje('Error de conexión con el servidor', 'error');
+        mostrarMensaje('Error de connexió amb el servidor', 'error');
       } finally {
         elementos.btnEnviar.disabled = false;
-        elementos.btnEnviar.textContent = 'Enviar disponibilidad';
+        elementos.btnEnviar.textContent = 'Enviar disponibilitat';
       }
     }
 
@@ -504,21 +599,22 @@
       try {
         const response = await fetch('/api/estado');
         const data = await response.json();
-        
+
         elementos.contador.textContent = data.usuariosRegistrados;
-        
+        elementos.progressFill.style.width = Math.min(100, (data.usuariosRegistrados / 4) * 100) + '%';
+
         if (data.usuarios && data.usuarios.length > 0) {
-          elementos.usuariosLista.textContent = 'Registrados: ' + data.usuarios.join(', ');
+          elementos.usuariosLista.textContent = 'Registrats: ' + data.usuarios.join(', ');
         } else {
           elementos.usuariosLista.textContent = '';
         }
-        
+
         if (data.completado) {
           mostrarResultado(data.fechasCoincidentes);
         } else {
           elementos.resultado.classList.remove('visible');
         }
-        
+
       } catch (error) {
         console.error('Error cargando estado:', error);
       }
@@ -527,50 +623,50 @@
     // ============ MOSTRAR RESULTADO ============
     function mostrarResultado(fechasCoincidentes) {
       elementos.resultado.classList.add('visible');
-      
+
       if (fechasCoincidentes && fechasCoincidentes.length > 0) {
         elementos.resultado.classList.remove('sin-coincidencias');
         const fechasFormateadas = fechasCoincidentes.map(f => {
           const [año, mes, dia] = f.split('-');
           const fecha = new Date(año, mes - 1, dia);
-          return fecha.toLocaleDateString('es-ES', { 
-            weekday: 'long', 
-            day: 'numeric', 
-            month: 'long' 
+          return fecha.toLocaleDateString('ca-ES', {
+            weekday: 'long',
+            day: 'numeric',
+            month: 'long'
           });
         });
-        
+
         elementos.resultadoContenido.innerHTML = `
-          <p>¡Los 4 amigos coinciden en ${fechasCoincidentes.length} fecha(s)!</p>
+          <p>Els 4 amics coincidiu en ${fechasCoincidentes.length} data/es!</p>
           <div class="fechas-ganadoras">
             ${fechasFormateadas.join('<br>')}
           </div>
-          <p>🎊 ¡Es hora de quedar!</p>
+          <p>És hora de quedar!</p>
         `;
       } else {
         elementos.resultado.classList.add('sin-coincidencias');
         elementos.resultadoContenido.innerHTML = `
-          <p>😢 No hay fechas en común entre los 4 amigos</p>
-          <p>Reinicia la votación para intentarlo de nuevo</p>
+          <p>No hi ha cap data en comú entre els 4 amics</p>
+          <p>Reinicia la votació per tornar-ho a provar</p>
         `;
       }
     }
 
     // ============ REINICIAR VOTACIÓN ============
     async function reiniciarVotacion() {
-      if (!confirm('¿Seguro que quieres reiniciar? Se eliminarán todos los datos.')) {
+      if (!confirm('Segur que vols reiniciar? S\'eliminaran totes les dades.')) {
         return;
       }
-      
+
       try {
         const response = await fetch('/api/reiniciar', { method: 'DELETE' });
         const data = await response.json();
-        
+
         mostrarMensaje(data.mensaje, 'exito');
         limpiarSeleccion();
         elementos.resultado.classList.remove('visible');
         cargarEstado();
-        
+
       } catch (error) {
         console.error('Error:', error);
         mostrarMensaje('Error al reiniciar', 'error');
@@ -590,7 +686,7 @@
     function mostrarMensaje(texto, tipo) {
       elementos.mensaje.textContent = texto;
       elementos.mensaje.className = 'mensaje ' + tipo;
-      
+
       setTimeout(() => {
         elementos.mensaje.className = 'mensaje';
       }, 5000);

@@ -14,8 +14,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Conexión a MongoDB
 mongoose.connect(process.env.MONGODB_URI)
-  .then(() => console.log('✅ Conectado a MongoDB'))
-  .catch(err => console.error('❌ Error conectando a MongoDB:', err));
+  .then(() => console.log('Connectat a MongoDB'))
+  .catch(err => console.error('Error connectant a MongoDB:', err));
 
 // Schema de Usuario
 const userSchema = new mongoose.Schema({
@@ -44,28 +44,28 @@ app.post('/api/disponibilidad', async (req, res) => {
   try {
     const { nombre, fechas } = req.body;
 
-    // Validaciones
+    // Validacions
     if (!nombre || !nombre.trim()) {
-      return res.status(400).json({ error: 'El nombre es requerido' });
+      return res.status(400).json({ error: 'El nom és obligatori' });
     }
 
     if (!fechas || fechas.length === 0) {
-      return res.status(400).json({ error: 'Debes seleccionar al menos una fecha' });
+      return res.status(400).json({ error: 'Has de seleccionar almenys una data' });
     }
 
-    // Verificar cuántos usuarios hay registrados
+    // Verificar quants usuaris hi ha registrats
     const totalUsuarios = await User.countDocuments();
 
     if (totalUsuarios >= 4) {
-      return res.status(400).json({ 
-        error: 'Ya hay 4 usuarios registrados. Reinicia la votación para empezar de nuevo.' 
+      return res.status(400).json({
+        error: 'Ja hi ha 4 usuaris registrats. Reinicia la votació per començar de nou.'
       });
     }
 
-    // Verificar si el usuario ya existe
+    // Verificar si l'usuari ja existeix
     const usuarioExistente = await User.findOne({ nombre: nombre.trim() });
     if (usuarioExistente) {
-      return res.status(400).json({ error: 'Este nombre ya está registrado' });
+      return res.status(400).json({ error: 'Aquest nom ja està registrat' });
     }
 
     // Crear nuevo usuario
@@ -84,7 +84,7 @@ app.post('/api/disponibilidad', async (req, res) => {
       const fechasCoincidentes = calcularInterseccion(todosUsuarios);
       
       return res.json({
-        mensaje: '¡Todos los usuarios han votado!',
+        mensaje: 'Tots els usuaris han votat!',
         usuariosRegistrados: 4,
         fechasCoincidentes: fechasCoincidentes,
         completado: true
@@ -92,7 +92,7 @@ app.post('/api/disponibilidad', async (req, res) => {
     }
 
     res.json({
-      mensaje: `¡Gracias ${nombre}! Tu disponibilidad ha sido registrada.`,
+      mensaje: `Gràcies ${nombre}! La teva disponibilitat s'ha registrat.`,
       usuariosRegistrados: todosUsuarios.length,
       faltan: 4 - todosUsuarios.length,
       completado: false
@@ -133,7 +133,7 @@ app.get('/api/estado', async (req, res) => {
 app.delete('/api/reiniciar', async (req, res) => {
   try {
     await User.deleteMany({});
-    res.json({ mensaje: 'Votación reiniciada. Todos los datos han sido eliminados.' });
+    res.json({ mensaje: 'Votació reiniciada. Totes les dades s\'han eliminat.' });
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({ error: 'Error del servidor' });
@@ -160,5 +160,5 @@ function calcularInterseccion(usuarios) {
 
 // Iniciar servidor
 app.listen(PORT, () => {
-  console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
+  console.log(`Servidor funcionant a http://localhost:${PORT}`);
 });
